@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Robô de Plantão - Consulta</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f6f6f6; padding: 40px; }
+        h1 { color: #333; }
+        input, button { padding: 8px; font-size: 16px; }
+        table { margin-top: 20px; width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+        th { background-color: #eee; }
+    </style>
+</head>
+<body>
+    <h1>📋 Consulta de Plantão por Atendente</h1>
+    <input type="text" id="nome" placeholder="Digite o nome do atendente">
+    <button onclick="buscar()">Buscar</button>
+
+    <table id="tabela" style="display:none;">
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Dia</th>
+                <th>Horário</th>
+                <th>Unidade</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script>
+        async function buscar() {
+            const nome = document.getElementById('nome').value;
+            const tabela = document.getElementById('tabela');
+            const tbody = tabela.querySelector('tbody');
+            tbody.innerHTML = '';
+            tabela.style.display = 'none';
+
+            const res = await fetch(`https://nume.onrender.com/plantao/atendente?nome=${encodeURIComponent(nome)}`);
+            const dados = await res.json();
+
+            if (dados.length > 0) {
+                dados.forEach(item => {
+                    const linha = `<tr>
+                        <td>${item.Data}</td>
+                        <td>${item.Dia}</td>
+                        <td>${item.Horário}</td>
+                        <td>${item.Unidade}</td>
+                    </tr>`;
+                    tbody.innerHTML += linha;
+                });
+                tabela.style.display = 'table';
+            } else {
+                alert("Nenhum plantão encontrado para este nome.");
+            }
+        }
+    </script>
+</body>
+</html>
