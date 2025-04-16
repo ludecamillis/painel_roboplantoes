@@ -25,7 +25,13 @@
       font-size: 1.8rem;
       margin: 0;
     }
-    input, button {
+    .inputs {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    input, select, button {
       padding: 10px;
       font-size: 1rem;
       border: 1px solid #ccc;
@@ -60,11 +66,24 @@
 <body>
   <header>
     <img src="/static/logo.png" alt="Logo MF8">
-    <h1>Consulta de Plantão por Atendente</h1>
+    <h1>Consulta de Plantão</h1>
   </header>
 
-  <input type="text" id="nome" placeholder="Digite o nome do atendente">
-  <button onclick="buscar()">Buscar</button>
+  <div class="inputs">
+    <input type="text" id="nome" placeholder="Buscar por Atendente">
+    <button onclick="buscarPorAtendente()">Buscar Atendente</button>
+
+    <select id="unidade">
+      <option value="">-- Selecione uma Unidade --</option>
+      <option value="Unidade Central">Unidade Central</option>
+      <option value="Unidade Norte">Unidade Norte</option>
+      <option value="Unidade Sul">Unidade Sul</option>
+      <option value="Unidade Leste">Unidade Leste</option>
+      <option value="Unidade Oeste">Unidade Oeste</option>
+      <option value="Unidade Vila Real">Unidade Vila Real</option>
+    </select>
+    <button onclick="buscarPorUnidade()">Buscar Unidade</button>
+  </div>
 
   <table id="tabela" style="display: none;">
     <thead>
@@ -79,36 +98,54 @@
   </table>
 
   <script>
-    async function buscar() {
+    async function buscarPorAtendente() {
       const nome = document.getElementById('nome').value;
-      const tabela = document.getElementById('tabela');
-      const tbody = tabela.querySelector('tbody');
-      tbody.innerHTML = '';
-      tabela.style.display = 'none';
+      if (!nome) return alert("Digite o nome do atendente");
 
       try {
         const res = await fetch(`https://nume.onrender.com/plantao/atendente?nome=${encodeURIComponent(nome)}`);
         const dados = await res.json();
-
-        if (dados.length > 0) {
-          dados.forEach(item => {
-            const linha = `
-              <tr>
-                <td>${item.Data}</td>
-                <td>${item.Dia}</td>
-                <td>${item.Horário}</td>
-                <td>${item.Unidade}</td>
-              </tr>
-            `;
-            tbody.innerHTML += linha;
-          });
-          tabela.style.display = 'table';
-        } else {
-          alert("Nenhum plantão encontrado para este nome.");
-        }
+        exibirTabela(dados);
       } catch (error) {
-        alert("Erro ao buscar os dados. Verifique a conexão com a API.");
+        alert("Erro ao buscar dados por atendente.");
       }
+    }
+
+    async function buscarPorUnidade() {
+      const unidade = document.getElementById('unidade').value;
+      if (!unidade) return alert("Selecione uma unidade");
+
+      try {
+        const res = await fetch(`https://nume.onrender.com/plantao/unidade?unidade=${encodeURIComponent(unidade)}`);
+        const dados = await res.json();
+        exibirTabela(dados);
+      } catch (error) {
+        alert("Erro ao buscar dados por unidade.");
+      }
+    }
+
+    function exibirTabela(dados) {
+      const tabela = document.getElementById('tabela');
+      const tbody = tabela.querySelector('tbody');
+      tbody.innerHTML = '';
+      tabela.style.display = dados.length ? 'table' : 'none';
+
+      if (dados.length === 0) {
+        alert("Nenhum resultado encontrado.");
+        return;
+      }
+
+      dados.forEach(item => {
+        const linha = `
+          <tr>
+            <td>${item.Data}</td>
+            <td>${item.Dia}</td>
+            <td>${item.Horário}</td>
+            <td>${item.Unidade}</td>
+          </tr>
+        `;
+        tbody.innerHTML += linha;
+      });
     }
   </script>
 </body>
