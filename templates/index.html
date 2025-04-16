@@ -2,20 +2,29 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Robô de Plantão - Consulta</title>
+    <title>Painel de Plantão - MF8</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f6f6f6; padding: 40px; }
-        h1 { color: #333; }
-        input, button { padding: 8px; font-size: 16px; }
-        table { margin-top: 20px; width: 100%; border-collapse: collapse; }
-        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
-        th { background-color: #eee; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f6fb; color: #222; padding: 30px; }
+        header { text-align: center; margin-bottom: 30px; }
+        header img { height: 80px; }
+        h1 { font-size: 26px; margin-top: 10px; color: #003366; }
+        input, button { padding: 10px; font-size: 16px; margin-top: 10px; }
+        button { background-color: #28a745; color: white; border: none; cursor: pointer; }
+        table { margin-top: 30px; width: 100%; border-collapse: collapse; background-color: white; box-shadow: 0 0 10px rgba(0,0,0,0.05); }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
+        th { background-color: #003366; color: white; }
     </style>
 </head>
 <body>
-    <h1>📋 Consulta de Plantão por Atendente</h1>
-    <input type="text" id="nome" placeholder="Digite o nome do atendente">
-    <button onclick="buscar()">Buscar</button>
+    <header>
+        <img src="/static/logo.png" alt="Logo MF8">
+        <h1>Consulta de Plantão por Atendente</h1>
+    </header>
+
+    <div style="text-align:center;">
+        <input type="text" id="nome" placeholder="Digite o nome do atendente">
+        <button onclick="buscar()">Buscar</button>
+    </div>
 
     <table id="tabela" style="display:none;">
         <thead>
